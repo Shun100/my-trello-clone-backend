@@ -5,14 +5,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
+@Configuration // DIコンテナに読み込ませる設定
 public class SecurityConfig {
 
   public SecurityConfig() {
     System.out.println(">>> SecurityConfig Loaded");
   }
 
-  @Bean
+  @Bean // DIコンテナに登録
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
         .authorizeHttpRequests(auth -> auth

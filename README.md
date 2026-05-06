@@ -1,6 +1,6 @@
 # my-trello-clone-backend
 
-## 1. プロジェクトの作成
+## 1. プロジェクトの作成手順
 
 - [Spring Initializr](https://start.spring.io/)
 
@@ -23,7 +23,7 @@
     - `Validation`: 引数チェック用
     - `Spring Boot DevTools`: ホットリロード機能
 
-## 2. 動作確認
+## 2. 動作確認手順
 
 - `src/main/resources/application.properties`にDB用の設定を追加
 - `src/main/java/com/app/trello_clone/config`にセキュリティ設定用のクラスを作成
