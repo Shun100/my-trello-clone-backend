@@ -1,27 +1,54 @@
 package com.app.trello_clone.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration // DIコンテナに読み込ませる設定
 public class SecurityConfig {
 
-  public SecurityConfig() {
-    System.out.println(">>> SecurityConfig Loaded");
-  }
+  @Value("${cors.allowed-origin}")
+  private String allowedOrigin;
+
 
   @Bean // DIコンテナに登録
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-        .authorizeHttpRequests(auth -> auth
-            // /helloは誰でもアクセス可能
-            .requestMatchers("/hello").permitAll()
-            // その以外は認証必須
-            .anyRequest().authenticated())
-        .csrf(csrf -> csrf.disable()); // REST API・テスト用に無効化
+      .cors(cors -> cors.configurationSource(
+        corsConfigurationSource()
+      )) // CORS有効化
+      .csrf(csrf -> csrf.disable()) // REST API・テスト用に無効化
+      .authorizeHttpRequests(auth -> auth
+        .requestMatchers("/hello").permitAll() // 動作確認用のページは誰でもアクセス可能
+        .requestMatchers("/auth/signup").permitAll() // サインアップページは誰でもアクセス可能
+        .anyRequest().authenticated()); // それ以外は認証必須
 
     return http.build();
+  }
+
+  /**
+   * CORS設定
+   * @return source - CORS設定情報
+   */
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(List.of(allowedOrigin));
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedHeaders(List.of("*"));
+    configuration.setAllowCredentials(true); // JWT Authorization Header許可用
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+    source.registerCorsConfiguration("/**", configuration);
+
+    return source;
   }
 }
