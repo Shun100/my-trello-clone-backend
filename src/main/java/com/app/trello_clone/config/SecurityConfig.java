@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -17,28 +18,26 @@ public class SecurityConfig {
   @Value("${cors.allowed-origin}")
   private String allowedOrigin;
 
-
   @Bean // DIコンテナに登録
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-      .cors(cors -> cors.configurationSource(
-        corsConfigurationSource()
-      )) // CORS有効化
-      .csrf(csrf -> csrf.disable()) // REST API・テスト用に無効化
-      .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/hello").permitAll() // 動作確認用のページは誰でもアクセス可能
-        .requestMatchers("/auth/signup").permitAll() // サインアップページは誰でもアクセス可能
-        .anyRequest().authenticated()); // それ以外は認証必須
+        .cors(cors -> cors.configurationSource(corsConfigSource())) // CORS設定
+        .csrf(AbstractHttpConfigurer::disable) // CSRF無効化 (REST API用)
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/hello").permitAll() // 動作確認用のページは誰でもアクセス可能
+            .requestMatchers("/auth/signup").permitAll() // サインアップページは誰でもアクセス可能
+            .anyRequest().authenticated()); // それ以外は認証必須
 
     return http.build();
   }
 
   /**
    * CORS設定
+   * 
    * @return source - CORS設定情報
    */
   @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
+  public CorsConfigurationSource corsConfigSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(List.of(allowedOrigin));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

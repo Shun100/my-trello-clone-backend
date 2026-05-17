@@ -2,7 +2,6 @@ package com.app.trello_clone.service;
 
 import com.app.trello_clone.entity.User;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,17 +32,18 @@ public class JwtService {
 
   /**
    * JWT(Json Web Token)生成
+   * 
    * @param user
    * @return token
    */
   public String generateToken(User user) {
     return Jwts.builder()
-      .setSubject(user.getId())
-      .claim("email", user.getEmail())
-      .claim("name", user.getName())
-      .setIssuedAt(new Date())
-      .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
-      .signWith(key)
-      .compact();
+        .setSubject(user.getId())
+        .claim("email", user.getEmail())
+        .claim("name", user.getName())
+        .setIssuedAt(new Date())
+        .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
+        .signWith(key)
+        .compact();
   }
 }
