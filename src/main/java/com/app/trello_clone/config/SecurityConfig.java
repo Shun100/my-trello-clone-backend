@@ -1,11 +1,15 @@
 package com.app.trello_clone.config;
 
+import com.app.trello_clone.filter.JwtAuthenticationFilter;
+import io.jsonwebtoken.Jwt;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -13,7 +17,10 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.List;
 
 @Configuration // DIコンテナに読み込ませる設定
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
   @Value("${cors.allowed-origin}")
   private String allowedOrigin;
@@ -26,7 +33,12 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/hello").permitAll() // 動作確認用のページは誰でもアクセス可能
             .requestMatchers("/auth/signup").permitAll() // サインアップページは誰でもアクセス可能
-            .anyRequest().authenticated()); // それ以外は認証必須
+            .anyRequest().authenticated()
+        ) // それ以外は認証必須
+      .addFilterBefore( // JWT検証
+        jwtAuthenticationFilter,
+        UsernamePasswordAuthenticationFilter.class
+      );
 
     return http.build();
   }

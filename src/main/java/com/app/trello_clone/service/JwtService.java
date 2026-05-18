@@ -1,6 +1,8 @@
 package com.app.trello_clone.service;
 
 import com.app.trello_clone.entity.User;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -45,5 +47,43 @@ public class JwtService {
         .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
         .signWith(key)
         .compact();
+  }
+
+  /**
+   * JWT検証
+   */
+  public boolean validateToken(String token) {
+    try {
+      Jwts.parserBuilder()
+        .setSigningKey(key)
+        .build()
+        .parsePlaintextJws(token);
+      return true;
+    } catch (JwtException | IllegalArgumentException e) {
+      return false;
+    }
+  }
+
+  /**
+   * JWTからClaims取得
+   * @param token
+   * @return claims
+   */
+  public Claims getClaims(String token) {
+    return Jwts
+      .parserBuilder()
+      .setSigningKey(key)
+      .build()
+      .parseClaimsJws(token) // ここで検証 署名の正しさ、期限、JWT形式、改ざんの有無
+      .getBody();
+  }
+
+  /**
+   * userId(sub)取得
+   * @param token
+   * @return userId
+   */
+  public String getUserId(String token) {
+    return getClaims(token).getSubject();
   }
 }
