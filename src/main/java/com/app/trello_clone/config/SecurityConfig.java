@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -30,6 +31,9 @@ public class SecurityConfig {
     http
         .cors(cors -> cors.configurationSource(corsConfigSource())) // CORS設定
         .csrf(AbstractHttpConfigurer::disable) // CSRF無効化 (REST API用)
+        .sessionManagement(session ->
+          session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        ) // JWT認証のみにするため、セッション認証無効化
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/hello").permitAll() // 動作確認用のページは誰でもアクセス可能
             .requestMatchers("/auth/signup").permitAll() // サインアップページは誰でもアクセス可能
@@ -45,7 +49,6 @@ public class SecurityConfig {
 
   /**
    * CORS設定
-   * 
    * @return source - CORS設定情報
    */
   @Bean
