@@ -56,21 +56,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // userId取得
     String userId = jwtService.getUserId(token);
 
-    // Spring Security 用認証オブジェクト作成
+    // Springに渡すための認証情報を作る
     UsernamePasswordAuthenticationToken authentication =
       new UsernamePasswordAuthenticationToken(
         userId,
-        null,
+        null, // JWTなのでパスワードは不要
         Collections.emptyList() // TODO: ロール認可が使えるようにする
       );
 
-    authentication.setDetails(
-      new WebAuthenticationDetailsSource().buildDetails(request)
-    );
+    // 認証結果をセットする 監査ログに残す等、後続処理で使う場合に必要
+//    authentication.setDetails(
+//      new WebAuthenticationDetailsSource().buildDetails(request)
+//    );
 
-    // 認証情報保存
+    // Springに認証情報を渡し、このリクエストは認証済みであることを伝える
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
+    // 次のFilterに処理を移譲
     filterChain.doFilter(request, response);
   }
 }
