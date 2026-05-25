@@ -1,7 +1,8 @@
 package com.app.trello_clone.service;
 
+import com.app.trello_clone.dto.SigninRequest;
 import com.app.trello_clone.dto.SignupRequest;
-import com.app.trello_clone.dto.SignupResponse;
+import com.app.trello_clone.dto.AuthResponse;
 import com.app.trello_clone.entity.User;
 import com.app.trello_clone.repository.AuthRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class AuthService {
    * @param request
    * @return response
    */
-  public SignupResponse signup(SignupRequest request) {
+  public AuthResponse signup(SignupRequest request) {
     authRepository.createUser(
       request.getName(),
       request.getEmail(),
@@ -26,9 +27,27 @@ public class AuthService {
     );
 
     User user = authRepository.findUserByEmail(request.getEmail());
-
     String token = jwtService.generateToken(user);
+    return new AuthResponse(user, token);
+  }
 
-    return new SignupResponse(user, token);
+  /**
+   * ログイン
+   * @param request
+   * @return response
+   */
+  public AuthResponse signin(SigninRequest request) {
+    User user = authRepository.findUserByEmail(request.email());
+    String token = jwtService.generateToken(user);
+    return new AuthResponse(user, token);
+  }
+
+  /**
+   * ユーザ情報取得
+   * @param userId
+   * @return user
+   */
+  public User getMe(String userId) {
+    return authRepository.findUserById(userId);
   }
 }

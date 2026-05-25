@@ -38,9 +38,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     final String authHeader = request.getHeader("Authorization");
 
-    // Bearer token が無い場合は「401 Unauthorized」を返す
+    // Bearer Tokenが無い場合は次のfilterに処理を委譲
+    // ここで401を返してしまうと、新規登録やログインができなくなる
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      filterChain.doFilter(request, response);
       return;
     }
 
@@ -49,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // JWT検証 検証に失敗したら「401 Unauthorized」を返す
     if (!jwtService.validateToken(token)) {
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT");
       return;
     }
 
@@ -65,9 +66,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       );
 
     // 認証結果をセットする 監査ログに残す等、後続処理で使う場合に必要
-//    authentication.setDetails(
-//      new WebAuthenticationDetailsSource().buildDetails(request)
-//    );
+    authentication.setDetails(
+      new WebAuthenticationDetailsSource().buildDetails(request)
+    );
 
     // Springに認証情報を渡し、このリクエストは認証済みであることを伝える
     SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -29,7 +29,7 @@ public class AuthRepository {
   }
 
   /**
-   * ユーザ取得
+   * ユーザ検索 (Email)
    * @param email
    * @return user
    */
@@ -38,5 +38,17 @@ public class AuthRepository {
         SELECT * FROM users WHERE email = ?
       """;
     return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
+  }
+
+  /**
+   * ユーザ検索 (ユーザID)
+   * @param userId
+   * @return user
+   */
+  public User findUserById(String userId) {
+    String sql = """
+        SELECT * FROM users WHERE userId = ?
+      """;
+    return jdbcTemplate.queryForObject(sql, new UserRowMapper(), userId);
   }
 }

@@ -1,7 +1,6 @@
 package com.app.trello_clone.config;
 
 import com.app.trello_clone.filter.JwtAuthenticationFilter;
-import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -35,14 +34,16 @@ public class SecurityConfig {
           session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         ) // JWT認証のみにするため、セッション認証無効化
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/hello").permitAll() // 動作確認用のページは誰でもアクセス可能
-            .requestMatchers("/auth/signup").permitAll() // サインアップページは誰でもアクセス可能
+            .requestMatchers(
+              "/hello",
+              "/auth/signup",
+              "/auth/signin").permitAll()
             .anyRequest().authenticated()
-        ) // それ以外は認証必須
-      .addFilterBefore( // JWT検証
-        jwtAuthenticationFilter,
-        UsernamePasswordAuthenticationFilter.class
-      );
+        )
+        .addFilterBefore( // JWT検証
+          jwtAuthenticationFilter,
+          UsernamePasswordAuthenticationFilter.class
+        ); // Beforeなので、authorizeHttpRequestsよりも先にこちらが実行される
 
     return http.build();
   }
