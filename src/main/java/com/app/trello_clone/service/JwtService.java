@@ -34,30 +34,41 @@ public class JwtService {
 
   /**
    * JWT(Json Web Token)生成
-   * 
+   * 署名ありJWT
    * @param user
    * @return token
+   *
+   * {
+   *   "sub": "...",
+   *   "email": "...",
+   *   "name": "...",
+   *   "iat": ...,
+   *   "exp": ...
+   * }
+   * というJSONデータ (JWTのpayload) を作ってJWTに入れたのち、JWT payload全体に対して署名
    */
   public String generateToken(User user) {
     return Jwts.builder()
-        .setSubject(user.getId())
+        .setSubject(user.getId().toString())
         .claim("email", user.getEmail())
         .claim("name", user.getName())
         .setIssuedAt(new Date())
         .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
-        .signWith(key)
+        .signWith(key) // 署名
         .compact();
   }
 
   /**
    * JWT検証
+   * 署名ありJWT
    */
   public boolean validateToken(String token) {
     try {
       Jwts.parserBuilder()
         .setSigningKey(key)
         .build()
-        .parsePlaintextJws(token);
+        // .parsePlaintextJws(token); 署名なしJWT用
+        .parseClaimsJws(token);
       return true;
     } catch (JwtException | IllegalArgumentException e) {
       return false;

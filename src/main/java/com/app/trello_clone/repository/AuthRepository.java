@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
 @RequiredArgsConstructor
 public class AuthRepository {
@@ -45,9 +47,9 @@ public class AuthRepository {
    * @param userId
    * @return user
    */
-  public User findUserById(String userId) {
+  public User findUserById(UUID userId) {
     String sql = """
-        SELECT * FROM users WHERE userId = ?
+        SELECT * FROM users WHERE id = ?
       """;
     return jdbcTemplate.queryForObject(sql, new UserRowMapper(), userId);
   }

@@ -8,6 +8,8 @@ import com.app.trello_clone.repository.AuthRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -48,6 +50,7 @@ public class AuthService {
    * @return user
    */
   public User getMe(String userId) {
-    return authRepository.findUserById(userId);
+    UUID uuid = UUID.fromString(userId);
+    return authRepository.findUserById(uuid);
   }
 }
