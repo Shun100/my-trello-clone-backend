@@ -3,7 +3,7 @@ package com.app.trello_clone.repository;
 import com.app.trello_clone.entity.User;
 import com.app.trello_clone.repository.mapper.UserRowMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.DataClassRowMapper;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -21,13 +21,21 @@ public class AuthRepository {
    * @param name
    * @param email
    * @param password
+   * @returns user
    */
-  public void createUser(String name, String email, String password) {
+  public User createUser(String name, String email, String password) {
     String sql = """
         INSERT INTO users (name, email, password)
         VALUES (?, ?, ?)
+        RETURNING *
       """;
-    jdbcTemplate.update(sql, name, email, password);
+    return jdbcTemplate.queryForObject(
+      sql,
+      BeanPropertyRowMapper.newInstance(User.class),
+      name,
+      email,
+      password
+    );
   }
 
   /**
@@ -39,7 +47,10 @@ public class AuthRepository {
     String sql = """
         SELECT * FROM users WHERE email = ?
       """;
-    return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
+    return jdbcTemplate.queryForObject(
+      sql,
+      BeanPropertyRowMapper.newInstance(User.class),
+      email);
   }
 
   /**
@@ -51,6 +62,22 @@ public class AuthRepository {
     String sql = """
         SELECT * FROM users WHERE id = ?
       """;
-    return jdbcTemplate.queryForObject(sql, new UserRowMapper(), userId);
+    return jdbcTemplate.queryForObject(
+      sql,
+      BeanPropertyRowMapper.newInstance(User.class),
+      userId
+    );
+  }
+
+  /**
+   * ユーザ削除
+   * NOTE: Board, Group, CardはDELETE CASCADEで連動して消える
+   * @param userId
+   */
+  public void deleteUser(UUID userId) {
+    String sql = """
+      DELETE FROM users WHERE id = ?
+    """;
+    jdbcTemplate.update(sql, userId);
   }
 }

@@ -15,7 +15,6 @@ public class UserRowMapper implements RowMapper<User> {
     user.setId(rs.getObject("id", UUID.class));
     user.setName(rs.getString("name"));
     user.setEmail(rs.getString("email"));
-    user.setBoardId(rs.getString("board_id"));
     user.setCreatedAt(
       rs.getTimestamp("created_at").toLocalDateTime()
     );
