@@ -21,12 +21,12 @@ public class BoardRepository {
    */
   public UUID create(UUID userId, String title) {
     String sql = """
-      INSERT INTO boards (user_id) VALUES (?);
+      INSERT INTO boards (user_id, title) VALUES (?, ?)
       RETURNING id;
     """;
     return jdbcTemplate.queryForObject(
       sql,
-      BeanPropertyRowMapper.newInstance(UUID.class),
+      UUID.class,
       userId,
       title
     );

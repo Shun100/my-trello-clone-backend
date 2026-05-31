@@ -14,7 +14,7 @@ public class FindCardResponse {
   private int position;
   private Date dueDate;
   private CardStatus status;
-  private String desc;
+  private String description;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

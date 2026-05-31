@@ -11,6 +11,7 @@ import com.app.trello_clone.repository.CardRepository;
 import com.app.trello_clone.repository.LaneRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -26,6 +27,7 @@ public class BoardService {
    * @param userId
    * @return response
    */
+  @Transactional
   public FindBoardResponse create(UUID userId) {
     // create new board
     String title = "My board";

@@ -20,7 +20,6 @@ public class CardService {
     upsertCardRequest.setLaneId(laneId);
     upsertCardRequest.setTitle("Sample Card");
     upsertCardRequest.setPosition(1);
-    upsertCardRequest.setDueDate(null);
     upsertCardRequest.setStatus(CardStatus.TODO);
     UUID cardId = cardRepository.create(upsertCardRequest);
 

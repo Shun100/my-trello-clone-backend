@@ -23,20 +23,20 @@ public class CardRepository {
    */
   public UUID create(UpsertCardRequest request) {
     String sql = """
-      INSERT INTO cards (lane_id, title, position, due_date, status, desc)
+      INSERT INTO cards (lane_id, title, position, due_date, status, description)
       VALUES (?, ?, ?, ?, ?, ?)
       RETURNING id
     """;
 
     return jdbcTemplate.queryForObject(
       sql,
-      BeanPropertyRowMapper.newInstance(UUID.class),
+      UUID.class,
       request.getLaneId(),
       request.getTitle(),
       request.getPosition(),
       Utils.toSqlDate(request.getDueDate()),
       request.getStatus().name(),
-      request.getDesc()
+      request.getDescription()
     );
   }
 
@@ -70,7 +70,7 @@ public class CardRepository {
         position = ?,
         due_date = ?,
         status = ?,
-        desc = ?
+        description = ?
     """;
 
     jdbcTemplate.batchUpdate(
@@ -83,7 +83,7 @@ public class CardRepository {
         ps.setInt(3, request.getPosition());
         ps.setDate(4, Utils.toSqlDate(request.getDueDate()));
         ps.setString(5, request.getStatus().name());
-        ps.setString(6, request.getDesc());
+        ps.setString(6, request.getDescription());
       }
     );
   }

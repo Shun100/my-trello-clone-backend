@@ -13,5 +13,5 @@ public class UpsertCardRequest {
   private int position;;
   private Date dueDate;;
   private CardStatus status;
-  private String desc;
+  private String description;
 }
