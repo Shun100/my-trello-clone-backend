@@ -1,4 +1,4 @@
-package com.app.trello_clone.dto;
+package com.app.trello_clone.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

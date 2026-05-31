@@ -1,34 +1,37 @@
-package com.app.trello_clone.repository.mapper;
+package com.app.trello_clone.repository;
 
-import com.app.trello_clone.dto.UpdateGroupRequest;
-import com.app.trello_clone.entity.Group;
+import com.app.trello_clone.dto.lane.UpdateLaneRequest;
+import com.app.trello_clone.entity.Lane;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
 
+@Repository
 @RequiredArgsConstructor
-public class GroupRepository {
+public class LaneRepository {
   private final JdbcTemplate jdbcTemplate;
 
   /**
-   * Group新規作成
+   * Lane新規作成
    * @param boardId
    * @param title
    * @param position
-   * @return group
+   * @return id
    */
-  public Group createGroup(UUID boardId, String title, int position) {
+  public UUID create(UUID boardId, String title, int position) {
     String sql = """
-      INSERT INTO GROUP (board_id, title, position) VALUES (?, ?, ?)
-      RETURNING *
+      INSERT INTO lanes (board_id, title, position)
+      VALUES (?, ?, ?)
+      RETURNING id
     """;
 
     return jdbcTemplate.queryForObject(
       sql,
-      BeanPropertyRowMapper.newInstance(Group.class),
+      UUID.class,
       boardId,
       title,
       position
@@ -36,12 +39,30 @@ public class GroupRepository {
   }
 
   /**
-   * Group更新 (バッチ更新)
+   * Lane検索 (boardId)
+   * @param boardId
+   * @return lanes
+   */
+  public List<Lane> findByBoardId (UUID boardId) {
+    String sql = """
+      SELECT * FROM lanes
+      WHERE board_id = ?
+    """;
+
+    return jdbcTemplate.query(
+      sql,
+      BeanPropertyRowMapper.newInstance(Lane.class),
+      boardId
+    );
+  }
+
+  /**
+   * Lane更新 (バッチ更新)
    * @param requests
    */
-  public void updateGroups(List<UpdateGroupRequest> requests) {
+  public void update(List<UpdateLaneRequest> requests) {
     String sql = """
-      UPDATE groups
+      UPDATE lanes
       SET
         title = ?,
         position = ?,

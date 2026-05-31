@@ -9,8 +9,8 @@ import java.util.UUID;
 @Data
 public class Board {
   private UUID id;
+  private UUID userId;
   private String title;
-  private List<Group> groups;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 }

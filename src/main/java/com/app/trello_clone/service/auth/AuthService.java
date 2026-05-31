@@ -1,8 +1,8 @@
-package com.app.trello_clone.service;
+package com.app.trello_clone.service.auth;
 
-import com.app.trello_clone.dto.SigninRequest;
-import com.app.trello_clone.dto.SignupRequest;
-import com.app.trello_clone.dto.AuthResponse;
+import com.app.trello_clone.dto.auth.SigninRequest;
+import com.app.trello_clone.dto.auth.SignupRequest;
+import com.app.trello_clone.dto.auth.AuthResponse;
 import com.app.trello_clone.entity.User;
 import com.app.trello_clone.repository.AuthRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,35 +13,35 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-  private final AuthRepository authRepository;
+  private final AuthRepository userRepository;
   private final JwtService jwtService;
 
   /**
-   * 新規ユーザ登録
+   * signup
    * @param request
    * @return response
    */
   public AuthResponse signup(SignupRequest request) {
-    authRepository.createUser(
+    UUID userId = userRepository.create(
       request.getName(),
       request.getEmail(),
       request.getPassword()
     );
 
-    User user = authRepository.findUserByEmail(request.getEmail());
+    User user = userRepository.findById(userId);
     String token = jwtService.generateToken(user);
-    return new AuthResponse(user, token);
+    return new AuthResponse(userId, token);
   }
 
   /**
-   * ログイン
+   * signin
    * @param request
    * @return response
    */
   public AuthResponse signin(SigninRequest request) {
-    User user = authRepository.findUserByEmail(request.email());
+    User user = userRepository.findByEmail(request.getEmail());
     String token = jwtService.generateToken(user);
-    return new AuthResponse(user, token);
+    return new AuthResponse(user.getId(), token);
   }
 
   /**
@@ -51,6 +51,6 @@ public class AuthService {
    */
   public User getMe(String userId) {
     UUID uuid = UUID.fromString(userId);
-    return authRepository.findUserById(uuid);
+    return userRepository.findById(uuid);
   }
 }

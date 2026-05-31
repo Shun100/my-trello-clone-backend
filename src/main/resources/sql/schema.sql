@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS boards (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- groups
-CREATE TABLE IF NOT EXISTS groups (
+-- lanes
+CREATE TABLE IF NOT EXISTS lanes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     board_id UUID REFERENCES boards(id) ON DELETE CASCADE,
     title VARCHAR(32) NOT NULL,
@@ -32,12 +32,13 @@ CREATE TABLE IF NOT EXISTS groups (
 -- cards
 CREATE TABLE IF NOT EXISTS cards (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    group_id UUID REFERENCES lists(id) ON DELETE CASCADE,
+    lane_id UUID REFERENCES lanes(id) ON DELETE CASCADE,
     title VARCHAR(32) NOT NULL,
     position INT UNIQUE NOT NULL,
-    due_data DATE NOT NULL,
-    is_completed boolean NOT NULL DEFAULT false,
-    description VARCHAR(128),
+    due_date DATE, -- Nullable
+    status VARCHAR(16) NOT NULL,
+    desc VARCHAR(128),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CHECK (status IN ('TODO', 'DOING', 'DONE', 'PENDING', 'CANCELLED'))
 );

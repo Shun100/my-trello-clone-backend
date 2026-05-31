@@ -1,10 +1,10 @@
 package com.app.trello_clone.controller;
 
-import com.app.trello_clone.dto.SigninRequest;
-import com.app.trello_clone.dto.SignupRequest;
-import com.app.trello_clone.dto.AuthResponse;
+import com.app.trello_clone.dto.auth.SigninRequest;
+import com.app.trello_clone.dto.auth.SignupRequest;
+import com.app.trello_clone.dto.auth.AuthResponse;
 import com.app.trello_clone.entity.User;
-import com.app.trello_clone.service.AuthService;
+import com.app.trello_clone.service.auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class AuthController {
   private final AuthService authService;
 
   /**
-   * 新規ユーザ登録
+   * signup
    * @param request
    * @return responseEntity
    */
@@ -36,6 +36,11 @@ public class AuthController {
       .body(response);
   }
 
+  /**
+   * signin
+   * @param request
+   * @return responseEntity
+   */
   @PostMapping("/auth/signin")
   public ResponseEntity<AuthResponse> signin (
     @Valid @RequestBody SigninRequest request) {
@@ -46,6 +51,11 @@ public class AuthController {
       .body(response);
   }
 
+  /**
+   * 現在のユーザ情報取得
+   * @param authentication
+   * @return responseEntity
+   */
   @GetMapping("/auth/me")
   public ResponseEntity<User> getMe (
     @Valid Authentication authentication) {

@@ -4,9 +4,11 @@ import com.app.trello_clone.entity.Board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+@Repository
 @RequiredArgsConstructor
 public class BoardRepository {
   private final JdbcTemplate jdbcTemplate;
@@ -15,23 +17,23 @@ public class BoardRepository {
    * Board新規作成
    * @param userId
    * @param title
-   * @return board ※ List<Group> groups はnullなので注意
+   * @return board
    */
-  public Board createBoard(UUID userId, String title) {
+  public UUID create(UUID userId, String title) {
     String sql = """
       INSERT INTO boards (user_id) VALUES (?);
-      RETURNING *;
+      RETURNING id;
     """;
     return jdbcTemplate.queryForObject(
       sql,
-      BeanPropertyRowMapper.newInstance(Board.class),
+      BeanPropertyRowMapper.newInstance(UUID.class),
       userId,
       title
     );
   }
 
   /**
-   * Board取得
+   * Board検索 (userId)
    * @param userId
    * @return board
    */

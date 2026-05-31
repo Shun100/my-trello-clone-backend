@@ -1,6 +1,6 @@
 package com.app.trello_clone.filter;
 
-import com.app.trello_clone.service.JwtService;
+import com.app.trello_clone.service.auth.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

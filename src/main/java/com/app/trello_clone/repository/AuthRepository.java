@@ -1,7 +1,6 @@
 package com.app.trello_clone.repository;
 
 import com.app.trello_clone.entity.User;
-import com.app.trello_clone.repository.mapper.UserRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,17 +20,17 @@ public class AuthRepository {
    * @param name
    * @param email
    * @param password
-   * @returns user
+   * @return userId
    */
-  public User createUser(String name, String email, String password) {
+  public UUID create(String name, String email, String password) {
     String sql = """
         INSERT INTO users (name, email, password)
         VALUES (?, ?, ?)
-        RETURNING *
+        RETURNING id
       """;
     return jdbcTemplate.queryForObject(
       sql,
-      BeanPropertyRowMapper.newInstance(User.class),
+      BeanPropertyRowMapper.newInstance(UUID.class),
       name,
       email,
       password
@@ -43,7 +42,7 @@ public class AuthRepository {
    * @param email
    * @return user
    */
-  public User findUserByEmail(String email) {
+  public User findByEmail(String email) {
     String sql = """
         SELECT * FROM users WHERE email = ?
       """;
@@ -58,7 +57,7 @@ public class AuthRepository {
    * @param userId
    * @return user
    */
-  public User findUserById(UUID userId) {
+  public User findById(UUID userId) {
     String sql = """
         SELECT * FROM users WHERE id = ?
       """;

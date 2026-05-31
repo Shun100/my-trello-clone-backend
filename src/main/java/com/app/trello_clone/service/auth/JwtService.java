@@ -1,4 +1,4 @@
-package com.app.trello_clone.service;
+package com.app.trello_clone.service.auth;
 
 import com.app.trello_clone.entity.User;
 import io.jsonwebtoken.Claims;
