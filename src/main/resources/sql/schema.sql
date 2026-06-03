@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS lanes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     board_id UUID REFERENCES boards(id) ON DELETE CASCADE,
     title VARCHAR(32) NOT NULL,
-    position INT UNIQUE NOT NULL,
+    position INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS cards (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     lane_id UUID REFERENCES lanes(id) ON DELETE CASCADE,
     title VARCHAR(32) NOT NULL,
-    position INT UNIQUE NOT NULL,
+    position INT NOT NULL,
     due_date DATE, -- Nullable
     status VARCHAR(16) NOT NULL,
     description VARCHAR(128),

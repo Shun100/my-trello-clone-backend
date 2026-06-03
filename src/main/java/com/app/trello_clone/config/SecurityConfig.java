@@ -32,7 +32,7 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
         .cors(cors -> cors.configurationSource(corsConfigSource())) // CORS設定
-        .csrf(AbstractHttpConfigurer::disable) // CSRF無効化 (REST API用)
+        .csrf(AbstractHttpConfigurer::disable) // CSRFトークンを発行しない (REST API用)
         .sessionManagement(session ->
           session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         ) // JWT認証のみにするため、セッション認証無効化

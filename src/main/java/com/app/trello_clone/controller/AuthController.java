@@ -60,6 +60,7 @@ public class AuthController {
   public ResponseEntity<User> getMe (
     @Valid Authentication authentication) {
     String userId = authentication.getName(); // メソッド名はgetNameだが、実際に返すのはuserId
+    System.out.println("userId = " + userId);
     User response = authService.getMe(userId);
 
     return ResponseEntity

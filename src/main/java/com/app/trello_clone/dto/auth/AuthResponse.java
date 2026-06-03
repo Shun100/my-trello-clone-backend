@@ -9,6 +9,6 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class AuthResponse {
-  private UUID userId;
+  private User user;
   private String token;
 }

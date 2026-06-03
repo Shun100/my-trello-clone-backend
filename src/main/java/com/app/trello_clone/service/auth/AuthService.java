@@ -30,7 +30,7 @@ public class AuthService {
 
     User user = userRepository.findById(userId);
     String token = jwtService.generateToken(user);
-    return new AuthResponse(userId, token);
+    return new AuthResponse(user, token);
   }
 
   /**
@@ -41,7 +41,7 @@ public class AuthService {
   public AuthResponse signin(SigninRequest request) {
     User user = userRepository.findByEmail(request.getEmail());
     String token = jwtService.generateToken(user);
-    return new AuthResponse(user.getId(), token);
+    return new AuthResponse(user, token);
   }
 
   /**

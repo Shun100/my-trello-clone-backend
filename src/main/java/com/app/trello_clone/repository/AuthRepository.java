@@ -30,7 +30,7 @@ public class AuthRepository {
       """;
     return jdbcTemplate.queryForObject(
       sql,
-      BeanPropertyRowMapper.newInstance(UUID.class),
+      UUID.class,
       name,
       email,
       password
