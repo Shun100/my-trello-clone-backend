@@ -17,13 +17,14 @@ public class BoardRepository {
    * Board新規作成
    * @param userId
    * @param title
-   * @return board
+   * @return boardId
    */
   public UUID create(UUID userId, String title) {
     String sql = """
       INSERT INTO boards (user_id, title) VALUES (?, ?)
-      RETURNING id;
+      returning id
     """;
+
     return jdbcTemplate.queryForObject(
       sql,
       UUID.class,

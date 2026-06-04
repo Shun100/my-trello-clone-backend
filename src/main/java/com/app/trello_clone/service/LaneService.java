@@ -17,26 +17,16 @@ public class LaneService {
   private final LaneRepository laneRepository;
 
   /**
-   * create a sample lane
+   * サンプルレーン作成
    * @param boardId
-   * @return response
+   * @return laneId
    */
-  public FindLaneResponse createSample(UUID boardId) {
-    UUID laneId = laneRepository.create(boardId, "Sample lane", 1);
-    Lane created = laneRepository.findByBoardId(boardId).getFirst();
-
-    FindLaneResponse response = new FindLaneResponse();
-    response.setId(laneId);
-    response.setTitle(created.getTitle());
-    response.setPosition(created.getPosition());
-    response.setCreatedAt(created.getCreatedAt());
-    response.setUpdatedAt(created.getUpdatedAt());
-
-    return response;
+  public UUID createSample(UUID boardId) {
+    return laneRepository.create(boardId, "Sample lane", 1);
   }
 
   /**
-   * 取得
+   * レーン検索
    * @param boardId
    * @return response
    */

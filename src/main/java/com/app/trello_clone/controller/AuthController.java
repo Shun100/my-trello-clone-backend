@@ -4,6 +4,7 @@ import com.app.trello_clone.dto.auth.SigninRequest;
 import com.app.trello_clone.dto.auth.SignupRequest;
 import com.app.trello_clone.dto.auth.AuthResponse;
 import com.app.trello_clone.entity.User;
+import com.app.trello_clone.errors.UserNotFoundException;
 import com.app.trello_clone.service.auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,9 +62,9 @@ public class AuthController {
   @GetMapping("/auth/me")
   public ResponseEntity<User> getMe (
     @Valid Authentication authentication) {
-    String userId = authentication.getName(); // メソッド名はgetNameだが、実際に返すのはuserId
-    System.out.println("userId = " + userId);
-    User response = authService.getMe(userId);
+    UUID userId = UUID.fromString(authentication.getName()); // メソッド名はgetNameだが、実際に返すのはuserId
+
+    User response = authService.find(userId);
 
     return ResponseEntity
       .status(HttpStatus.OK)

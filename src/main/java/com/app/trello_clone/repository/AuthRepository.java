@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -57,15 +59,18 @@ public class AuthRepository {
    * @param userId
    * @return user
    */
-  public User findById(UUID userId) {
+  public Optional<User> findById(UUID userId) {
     String sql = """
         SELECT * FROM users WHERE id = ?
       """;
-    return jdbcTemplate.queryForObject(
+
+    List<User> users =  jdbcTemplate.query(
       sql,
       BeanPropertyRowMapper.newInstance(User.class),
       userId
     );
+
+    return users.stream().findFirst();
   }
 
   /**

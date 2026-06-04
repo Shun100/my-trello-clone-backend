@@ -4,16 +4,20 @@ import com.app.trello_clone.dto.auth.SigninRequest;
 import com.app.trello_clone.dto.auth.SignupRequest;
 import com.app.trello_clone.dto.auth.AuthResponse;
 import com.app.trello_clone.entity.User;
+import com.app.trello_clone.errors.UserNotFoundException;
 import com.app.trello_clone.repository.AuthRepository;
+import com.app.trello_clone.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
   private final AuthRepository userRepository;
+  private final BoardService boardService;
   private final JwtService jwtService;
 
   /**
@@ -28,9 +32,18 @@ public class AuthService {
       request.getPassword()
     );
 
-    User user = userRepository.findById(userId);
-    String token = jwtService.generateToken(user);
-    return new AuthResponse(user, token);
+    // 新規登録時のサンプルボード作成
+    boardService.create(userId);
+
+    Optional<User> optionalUser = userRepository.findById(userId);
+
+    if (optionalUser.isPresent()) {
+      User user = optionalUser.get();
+      String token = jwtService.generateToken(user);
+      return new AuthResponse(user, token);
+    } else {
+      throw new UserNotFoundException(userId);
+    }
   }
 
   /**
@@ -49,8 +62,9 @@ public class AuthService {
    * @param userId
    * @return user
    */
-  public User getMe(String userId) {
-    UUID uuid = UUID.fromString(userId);
-    return userRepository.findById(uuid);
+  public User find(UUID userId) {
+    return userRepository
+      .findById(userId)
+      .orElseThrow(() -> new UserNotFoundException(userId));
   }
 }

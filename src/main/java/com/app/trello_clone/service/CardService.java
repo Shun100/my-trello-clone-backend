@@ -17,28 +17,26 @@ import java.util.UUID;
 public class CardService {
   private final CardRepository cardRepository;
 
-  public FindCardResponse createSample(UUID laneId) {
+  /**
+   * サンプルカード作成
+   * @param laneId
+   * @return cardId
+   */
+  public UUID createSample(UUID laneId) {
     UpsertCardRequest upsertCardRequest = new UpsertCardRequest();
     upsertCardRequest.setLaneId(laneId);
     upsertCardRequest.setTitle("Sample Card");
     upsertCardRequest.setPosition(1);
     upsertCardRequest.setStatus(CardStatus.TODO);
-    UUID cardId = cardRepository.create(upsertCardRequest);
 
-    Card created = cardRepository.findByLaneId(laneId).getFirst();
-
-    FindCardResponse response = new FindCardResponse();
-    response.setId(cardId);
-    response.setTitle(created.getTitle());
-    response.setPosition(created.getPosition());
-    response.setDueDate(created.getDueDate());
-    response.setStatus(created.getStatus());
-    response.setCreatedAt(created.getCratedAt());
-    response.setUpdatedAt(created.getUpdatedAt());
-
-    return response;
+    return cardRepository.create(upsertCardRequest);
   }
 
+  /**
+   * カード検索
+   * @param laneId
+   * @return findCardResponse
+   */
   public List<FindCardResponse> find(UUID laneId) {
     List<FindCardResponse> cardDTOs = new ArrayList<>();
 

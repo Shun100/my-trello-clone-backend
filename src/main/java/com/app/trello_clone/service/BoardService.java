@@ -26,36 +26,23 @@ public class BoardService {
   private final CardService cardService;
 
   /**
-   * create a sample board
+   * ボード作成
    * @param userId
    * @return response
    */
   @Transactional
-  public FindBoardResponse create(UUID userId) {
-    // create new board
+  public void create(UUID userId) {
     String title = "My board";
     UUID boardId = boardRepository.create(userId, title);
-    Board created = boardRepository.findByUserId(userId);
-
-    // create a sample lane
-    FindLaneResponse laneResponse = laneService.createSample(boardId);
-
-    // create a sample card
-    FindCardResponse cardResponse = cardService.createSample(laneResponse.getId());
-
-    // response
-    laneResponse.getCards().add(cardResponse);
-
-    FindBoardResponse boardResponse  = new FindBoardResponse();
-    boardResponse.setId(boardId);
-    boardResponse.setTitle(title);
-    boardResponse.getLanes().add(laneResponse);
-    boardResponse.setCreatedAt(created.getCreatedAt());
-    boardResponse.setUpdatedAt(created.getUpdatedAt());
-
-    return boardResponse;
+    UUID laneId = laneService.createSample(boardId);
+    cardService.createSample(laneId);
   }
 
+  /**
+   * ボード検索
+   * @param userId
+   * @return findBoardResponse
+   */
   public FindBoardResponse find(UUID userId) {
     Board board = boardRepository.findByUserId(userId);
 
