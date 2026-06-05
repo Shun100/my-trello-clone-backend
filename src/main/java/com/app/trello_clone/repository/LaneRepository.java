@@ -57,10 +57,10 @@ public class LaneRepository {
   }
 
   /**
-   * Lane更新 (バッチ更新)
-   * @param requests
+   * レーン更新 (バッチ更新)
+   * @param lanes
    */
-  public void update(List<UpdateLaneRequest> requests) {
+  public void update(List<Lane> lanes) {
     String sql = """
       UPDATE lanes
       SET
@@ -72,16 +72,20 @@ public class LaneRepository {
 
     jdbcTemplate.batchUpdate(
       sql,
-      requests,
-      requests.size(),
-      (ps, request) -> {
-        ps.setString(1, request.getTitle());
-        ps.setInt(2, request.getPosition());
-        ps.setObject(3, request.getId());
+      lanes,
+      lanes.size(),
+      (ps, lane) -> {
+        ps.setString(1, lane.getTitle());
+        ps.setInt(2, lane.getPosition());
+        ps.setObject(3, lane.getId());
       }
     );
   }
 
+  /**
+   * レーン削除
+   * @param id
+   */
   public void delete(UUID id) {
     String sql = """
       DELETE FROM lanes

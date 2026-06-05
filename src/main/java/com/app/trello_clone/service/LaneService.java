@@ -2,6 +2,7 @@ package com.app.trello_clone.service;
 
 import com.app.trello_clone.dto.lane.CreateLaneRequest;
 import com.app.trello_clone.dto.lane.FindLaneResponse;
+import com.app.trello_clone.dto.lane.UpdateLaneRequest;
 import com.app.trello_clone.entity.Lane;
 import com.app.trello_clone.repository.LaneRepository;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +63,29 @@ public class LaneService {
     return laneDTOs;
   }
 
+  /**
+   * レーン更新
+   * @param requestDTOs
+   */
+  public void update(List<UpdateLaneRequest> requestDTOs) {
+
+    List<Lane> lanes = requestDTOs.stream()
+      .map(dto -> {
+        Lane lane = new Lane();
+        lane.setId(dto.getId());
+        lane.setTitle(dto.getTitle());
+        lane.setPosition(dto.getPosition());
+        return lane;
+      })
+      .toList();
+
+    laneRepository.update(lanes);
+  }
+
+  /**
+   * レーン削除
+   * @param id
+   */
   public void delete(UUID id) {
     laneRepository.delete(id);
   }
