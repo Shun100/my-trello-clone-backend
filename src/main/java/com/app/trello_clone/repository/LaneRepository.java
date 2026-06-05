@@ -22,16 +22,16 @@ public class LaneRepository {
    * @param position
    * @return id
    */
-  public UUID create(UUID boardId, String title, int position) {
+  public Lane create(UUID boardId, String title, int position) {
     String sql = """
       INSERT INTO lanes (board_id, title, position)
       VALUES (?, ?, ?)
-      RETURNING id
+      RETURNING *
     """;
 
     return jdbcTemplate.queryForObject(
       sql,
-      UUID.class,
+      BeanPropertyRowMapper.newInstance(Lane.class),
       boardId,
       title,
       position
@@ -80,5 +80,14 @@ public class LaneRepository {
         ps.setObject(3, request.getId());
       }
     );
+  }
+
+  public void delete(UUID id) {
+    String sql = """
+      DELETE FROM lanes
+      WHERE id = ?
+    """;
+
+    jdbcTemplate.update(sql, id);
   }
 }

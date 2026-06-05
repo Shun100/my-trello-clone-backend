@@ -1,5 +1,6 @@
 package com.app.trello_clone.service;
 
+import com.app.trello_clone.dto.lane.CreateLaneRequest;
 import com.app.trello_clone.dto.lane.FindLaneResponse;
 import com.app.trello_clone.entity.Lane;
 import com.app.trello_clone.repository.LaneRepository;
@@ -22,7 +23,20 @@ public class LaneService {
    * @return laneId
    */
   public UUID createSample(UUID boardId) {
-    return laneRepository.create(boardId, "Sample lane", 1);
+    return laneRepository
+      .create(boardId, "Sample Lane", 1)
+      .getId();
+  }
+
+  /**
+   * レーン作成
+   */
+  public Lane create(CreateLaneRequest request) {
+    return laneRepository.create(
+      request.getBoardId(),
+      request.getTitle(),
+      request.getPosition()
+    );
   }
 
   /**
@@ -46,5 +60,9 @@ public class LaneService {
     }
 
     return laneDTOs;
+  }
+
+  public void delete(UUID id) {
+    laneRepository.delete(id);
   }
 }

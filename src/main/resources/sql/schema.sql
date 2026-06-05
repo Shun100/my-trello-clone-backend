@@ -1,4 +1,4 @@
-CREATE EXTENSION IF NOT EXISTS pgcrypto; -- UUID生成用
+CREATE EXTENSION IF NOT EXISTS pgcrypto@@ -- UUID生成用
 
 -- users
 CREATE TABLE IF NOT EXISTS users (
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(32) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+)@@
 
 -- boards
 CREATE TABLE IF NOT EXISTS boards (
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS boards (
     title VARCHAR(32) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+)@@
 
 -- lanes
 CREATE TABLE IF NOT EXISTS lanes (
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS lanes (
     position INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+)@@
 
 -- cards
 CREATE TABLE IF NOT EXISTS cards (
@@ -41,4 +41,21 @@ CREATE TABLE IF NOT EXISTS cards (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CHECK (status IN ('TODO', 'DOING', 'DONE', 'PENDING', 'CANCELLED'))
-);
+)@@
+
+-- Lane削除時にpositionを詰める
+CREATE OR REPLACE FUNCTION reorder_lanes_after_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE lanes
+    SET position = position - 1
+    WHERE board_id = OLD.board_id AND position > OLD.position;
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql@@
+
+CREATE OR REPLACE TRIGGER trg_reorder_lanes_after_delete
+AFTER DELETE ON lanes
+FOR EACH ROW
+EXECUTE FUNCTION reorder_lanes_after_delete()@@
