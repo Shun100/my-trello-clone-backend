@@ -25,7 +25,7 @@ public class LaneService {
    */
   public UUID createSample(UUID boardId) {
     return laneRepository
-      .create(boardId, "Sample Lane", 1)
+      .create(boardId, "Sample Lane", 0)
       .getId();
   }
 

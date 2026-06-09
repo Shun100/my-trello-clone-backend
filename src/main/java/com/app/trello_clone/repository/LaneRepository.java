@@ -47,6 +47,7 @@ public class LaneRepository {
     String sql = """
       SELECT * FROM lanes
       WHERE board_id = ?
+      ORDER BY position
     """;
 
     return jdbcTemplate.query(

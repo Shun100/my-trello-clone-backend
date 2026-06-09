@@ -1,6 +1,7 @@
 package com.app.trello_clone.service;
 
 import com.app.trello_clone.constant.CardStatus;
+import com.app.trello_clone.dto.card.CreateCardRequest;
 import com.app.trello_clone.dto.card.FindCardResponse;
 import com.app.trello_clone.dto.card.UpsertCardRequest;
 import com.app.trello_clone.entity.Card;
@@ -54,5 +55,17 @@ public class CardService {
     }
 
     return cardDTOs;
+  }
+
+  public Card create(CreateCardRequest requestDTO) {
+    Card card = new Card();
+    card.setTitle(requestDTO.getTitle());
+    card.setLaneId(requestDTO.getLaneId());
+    card.setPosition(1); // TODO: 正しい位置に修正
+    card.setDueDate(null);
+    card.setStatus(CardStatus.TODO);
+    card.setDescription("");
+
+    return cardRepository.create(card);
   }
 }

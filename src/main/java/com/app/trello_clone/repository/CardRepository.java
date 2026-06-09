@@ -40,6 +40,25 @@ public class CardRepository {
     );
   }
 
+  public Card create(Card card) {
+    String sql = """
+      INSERT INTO cards (lane_id, title, position, due_date, status, description)
+      VALUES (?, ?, ?, ?, ?, ?)
+      RETURNING *
+    """;
+
+    return jdbcTemplate.queryForObject(
+      sql,
+      BeanPropertyRowMapper.newInstance(Card.class),
+      card.getLaneId(),
+      card.getTitle(),
+      card.getPosition(),
+      card.getDueDate(),
+      card.getStatus(),
+      card.getDescription()
+    );
+  }
+
   /**
    * Card検索 (LaneId)
    * @param laneId
