@@ -54,7 +54,7 @@ public class CardRepository {
       card.getTitle(),
       card.getPosition(),
       card.getDueDate(),
-      card.getStatus(),
+      card.getStatus().name(),
       card.getDescription()
     );
   }

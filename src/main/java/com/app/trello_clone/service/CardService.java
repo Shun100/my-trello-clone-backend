@@ -27,7 +27,7 @@ public class CardService {
     UpsertCardRequest upsertCardRequest = new UpsertCardRequest();
     upsertCardRequest.setLaneId(laneId);
     upsertCardRequest.setTitle("Sample Card");
-    upsertCardRequest.setPosition(1);
+    upsertCardRequest.setPosition(0);
     upsertCardRequest.setStatus(CardStatus.TODO);
 
     return cardRepository.create(upsertCardRequest);
@@ -61,7 +61,7 @@ public class CardService {
     Card card = new Card();
     card.setTitle(requestDTO.getTitle());
     card.setLaneId(requestDTO.getLaneId());
-    card.setPosition(1); // TODO: 正しい位置に修正
+    card.setPosition(requestDTO.getPosition());
     card.setDueDate(null);
     card.setStatus(CardStatus.TODO);
     card.setDescription("");

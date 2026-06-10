@@ -8,4 +8,5 @@ import java.util.UUID;
 public class CreateCardRequest {
   private String title;
   private UUID laneId;
+  private int position;
 }
