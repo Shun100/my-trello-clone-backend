@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS cards (
     lane_id UUID REFERENCES lanes(id) ON DELETE CASCADE,
     title VARCHAR(32) NOT NULL,
     position INT NOT NULL,
-    due_date DATE, -- Nullable
+    due_date DATE NOT NULL,
     status VARCHAR(16) NOT NULL,
     description VARCHAR(128),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -9,9 +9,8 @@ import com.app.trello_clone.repository.CardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +28,11 @@ public class CardService {
     upsertCardRequest.setTitle("Sample Card");
     upsertCardRequest.setPosition(0);
     upsertCardRequest.setStatus(CardStatus.TODO);
+
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(new Date()); // 現在日時
+    cal.add(Calendar.DAY_OF_MONTH, 14); // 14日後
+    upsertCardRequest.setDueDate(cal.getTime());
 
     return cardRepository.create(upsertCardRequest);
   }
@@ -62,9 +66,9 @@ public class CardService {
     card.setTitle(requestDTO.getTitle());
     card.setLaneId(requestDTO.getLaneId());
     card.setPosition(requestDTO.getPosition());
-    card.setDueDate(null);
     card.setStatus(CardStatus.TODO);
     card.setDescription("");
+    card.setDueDate(requestDTO.getDueDate());
 
     return cardRepository.create(card);
   }
