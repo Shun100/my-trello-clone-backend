@@ -59,3 +59,20 @@ CREATE OR REPLACE TRIGGER trg_reorder_lanes_after_delete
 AFTER DELETE ON lanes
 FOR EACH ROW
 EXECUTE FUNCTION reorder_lanes_after_delete()@@
+
+-- Card削除時にpositionを詰める
+CREATE OR REPLACE FUNCTION reorder_cards_after_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE cards
+    SET position = position - 1
+    WHERE lane_id = OLD.lane_id AND position > OLD.position;
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql@@
+
+CREATE OR REPLACE TRIGGER trg_reorder_cards_after_delete
+AFTER DELETE ON cards
+FOR EACH ROW
+EXECUTE FUNCTION reorder_cards_after_delete()@@

@@ -3,6 +3,7 @@ package com.app.trello_clone.service;
 import com.app.trello_clone.constant.CardStatus;
 import com.app.trello_clone.dto.card.CreateCardRequest;
 import com.app.trello_clone.dto.card.FindCardResponse;
+import com.app.trello_clone.dto.card.UpdateCardRequest;
 import com.app.trello_clone.dto.card.UpsertCardRequest;
 import com.app.trello_clone.entity.Card;
 import com.app.trello_clone.repository.CardRepository;
@@ -61,6 +62,11 @@ public class CardService {
     return cardDTOs;
   }
 
+  /**
+   * カード新規作成
+   * @param requestDTO
+   * @return createdCard
+   */
   public Card create(CreateCardRequest requestDTO) {
     Card card = new Card();
     card.setTitle(requestDTO.getTitle());
@@ -71,5 +77,24 @@ public class CardService {
     card.setDueDate(requestDTO.getDueDate());
 
     return cardRepository.create(card);
+  }
+
+  public void update(UpdateCardRequest requestDTO) {
+    Card card = new Card();
+    card.setId(requestDTO.getId());
+    card.setTitle(requestDTO.getTitle());
+    card.setStatus(requestDTO.getStatus());
+    card.setDueDate(requestDTO.getDueDate());
+    card.setDescription(requestDTO.getDescription());
+
+    cardRepository.update(card);
+  }
+
+  /**
+   * カード削除
+   * @param cardId
+   */
+  public void delete(UUID cardId) {
+    cardRepository.delete(cardId);
   }
 }

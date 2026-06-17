@@ -21,6 +21,7 @@ public class CardRepository {
    * @param request
    * @return id
    */
+  @Deprecated // EntityではなくDTOを引数に取ってしまっているので、Repository層の設計として良くない
   public UUID create(UpsertCardRequest request) {
     String sql = """
       INSERT INTO cards (lane_id, title, position, due_date, status, description)
@@ -40,6 +41,11 @@ public class CardRepository {
     );
   }
 
+  /**
+   * Card新規登録
+   * @param card
+   * @return createdCard
+   */
   public Card create(Card card) {
     String sql = """
       INSERT INTO cards (lane_id, title, position, due_date, status, description)
@@ -78,32 +84,53 @@ public class CardRepository {
 
   /**
    * Card更新
-   * @param requests
+   * @param card
    */
-  public void update(List<UpsertCardRequest> requests) {
+  public void update(Card card) {
+    System.out.println(card.toString());
+
     String sql = """
       UPDATE cards
       SET
-        lane_id = ?,
         title = ?,
-        position = ?,
         due_date = ?,
         status = ?,
-        description = ?
+        description = ?,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
     """;
 
-    jdbcTemplate.batchUpdate(
+    jdbcTemplate.update(
       sql,
-      requests,
-      requests.size(),
-      (ps, request) -> {
-        ps.setObject(1, request.getLaneId());
-        ps.setString(2, request.getTitle());
-        ps.setInt(3, request.getPosition());
-        ps.setDate(4, Utils.toSqlDate(request.getDueDate()));
-        ps.setString(5, request.getStatus().name());
-        ps.setString(6, request.getDescription());
-      }
+      card.getTitle(),
+      card.getDueDate(),
+      card.getStatus().name(),
+      card.getDescription(),
+      card.getId()
     );
+
+//    jdbcTemplate.batchUpdate(
+//      sql,
+//      requests,
+//      requests.size(),
+//      (ps, request) -> {
+//        ps.setString(1, request.getTitle());
+//        ps.setDate(2, Utils.toSqlDate(request.getDueDate()));
+//        ps.setString(3, request.getStatus().name());
+//        ps.setString(4, request.getDescription());
+//      }
+//    );
+  }
+
+  /**
+   * カード削除
+   * @param cardId
+   */
+  public void delete(UUID cardId) {
+    String sql = """
+      DELETE FROM cards WHERE id = ?
+    """;
+
+    jdbcTemplate.update(sql, cardId);
   }
 }

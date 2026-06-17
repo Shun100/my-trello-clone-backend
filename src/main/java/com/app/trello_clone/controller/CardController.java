@@ -1,6 +1,7 @@
 package com.app.trello_clone.controller;
 
 import com.app.trello_clone.dto.card.CreateCardRequest;
+import com.app.trello_clone.dto.card.UpdateCardRequest;
 import com.app.trello_clone.entity.Card;
 import com.app.trello_clone.service.CardService;
 import jakarta.validation.Valid;
@@ -8,14 +9,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
 public class CardController {
   private final CardService cardService;
 
+  /**
+   * カード新規作成
+   * @param requestDTO
+   * @return createdCard
+   */
   @PostMapping("/cards/create")
   public ResponseEntity<Card> create(
     @Valid @RequestBody CreateCardRequest requestDTO) {
@@ -24,5 +34,26 @@ public class CardController {
     return ResponseEntity
       .status(HttpStatus.CREATED)
       .body(newCard);
+  }
+
+  /**
+   * カード更新
+   * @param requestDTO
+   */
+  @PostMapping("/cards/update")
+  public ResponseEntity<Void> update(
+    @Valid @RequestBody UpdateCardRequest requestDTO) {
+    cardService.update(requestDTO);
+
+    return ResponseEntity.ok().build();
+  }
+
+  /**
+   * カード削除
+   * @param cardId
+   */
+  @DeleteMapping("/cards/{cardId}")
+  public void delete(@PathVariable UUID cardId) {
+    cardService.delete(cardId);
   }
 }
