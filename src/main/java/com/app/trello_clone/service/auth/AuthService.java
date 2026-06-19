@@ -4,10 +4,12 @@ import com.app.trello_clone.dto.auth.SigninRequest;
 import com.app.trello_clone.dto.auth.SignupRequest;
 import com.app.trello_clone.dto.auth.AuthResponse;
 import com.app.trello_clone.entity.User;
+import com.app.trello_clone.errors.UserAlreadyExistsException;
 import com.app.trello_clone.errors.UserNotFoundException;
 import com.app.trello_clone.repository.AuthRepository;
 import com.app.trello_clone.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,13 +28,21 @@ public class AuthService {
    * @return response
    */
   public AuthResponse signup(SignupRequest request) {
-    UUID userId = userRepository.create(
-      request.getName(),
-      request.getEmail(),
-      request.getPassword()
-    );
+    String email = request.getEmail();
+    UUID userId = null;
 
-    // 新規登録時のサンプルボード作成
+    try {
+      // ユーザ登録
+      userId = userRepository.create(
+        request.getName(),
+        email,
+        request.getPassword()
+      );
+    } catch (DuplicateKeyException e) {
+      throw new UserAlreadyExistsException(e.getMessage());
+    }
+
+    // Sample board作成
     boardService.create(userId);
 
     Optional<User> optionalUser = userRepository.findById(userId);

@@ -4,6 +4,7 @@ import com.app.trello_clone.dto.auth.SigninRequest;
 import com.app.trello_clone.dto.auth.SignupRequest;
 import com.app.trello_clone.dto.auth.AuthResponse;
 import com.app.trello_clone.entity.User;
+import com.app.trello_clone.errors.UserAlreadyExistsException;
 import com.app.trello_clone.errors.UserNotFoundException;
 import com.app.trello_clone.service.auth.AuthService;
 import jakarta.validation.Valid;
@@ -32,11 +33,18 @@ public class AuthController {
   @PostMapping("/auth/signup")
   public ResponseEntity<AuthResponse> signup(
     @Valid @RequestBody SignupRequest request) {
-    AuthResponse response = authService.signup(request);
 
-    return ResponseEntity
-      .status(HttpStatus.CREATED)
-      .body(response);
+    try {
+      AuthResponse response = authService.signup(request);
+      return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(response);
+
+    } catch (UserAlreadyExistsException e) {
+      return ResponseEntity
+        .status(HttpStatus.CONFLICT)
+        .body(null);
+    }
   }
 
   /**
