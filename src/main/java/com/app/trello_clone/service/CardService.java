@@ -10,7 +10,6 @@ import com.app.trello_clone.repository.CardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -24,18 +23,18 @@ public class CardService {
    * @return cardId
    */
   public UUID createSample(UUID laneId) {
-    UpsertCardRequest upsertCardRequest = new UpsertCardRequest();
-    upsertCardRequest.setLaneId(laneId);
-    upsertCardRequest.setTitle("Sample Card");
-    upsertCardRequest.setPosition(0);
-    upsertCardRequest.setStatus(CardStatus.TODO);
+    Card card = new Card();
+    card.setLaneId(laneId);
+    card.setTitle("Sample Card");
+    card.setPosition(0);
+    card.setStatus(CardStatus.TODO);
 
     Calendar cal = Calendar.getInstance();
     cal.setTime(new Date()); // 現在日時
     cal.add(Calendar.DAY_OF_MONTH, 14); // 14日後
-    upsertCardRequest.setDueDate(cal.getTime());
+    card.setDueDate(cal.getTime());
 
-    return cardRepository.create(upsertCardRequest);
+    return cardRepository.create(card).getId();
   }
 
   /**
@@ -79,6 +78,10 @@ public class CardService {
     return cardRepository.create(card);
   }
 
+  /**
+   * カード更新
+   * @param requestDTO
+   */
   public void update(UpdateCardRequest requestDTO) {
     Card card = new Card();
     card.setId(requestDTO.getId());

@@ -70,7 +70,9 @@ public class AuthController {
   @GetMapping("/auth/me")
   public ResponseEntity<User> getMe (
     @Valid Authentication authentication) {
-    UUID userId = UUID.fromString(authentication.getName()); // メソッド名はgetNameだが、実際に返すのはuserId
+
+    // メソッド名はgetNameだが、実際に返すのはuserId
+    UUID userId = UUID.fromString(authentication.getName());
 
     User response = authService.find(userId);
 

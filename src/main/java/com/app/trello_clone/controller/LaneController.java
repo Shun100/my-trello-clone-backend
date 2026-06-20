@@ -27,10 +27,10 @@ public class LaneController {
    */
   @PostMapping("/lane/create")
   public ResponseEntity<Lane> create(
-    @Valid @RequestBody CreateLaneRequest request
+    @Valid @RequestBody CreateLaneRequest requestDTO
     ) {
 
-    Lane lane = laneService.create(request);
+    Lane lane = laneService.create(requestDTO);
 
     return ResponseEntity
       .status(HttpStatus.CREATED)

@@ -18,31 +18,6 @@ public class CardRepository {
 
   /**
    * Card新規登録
-   * @param request
-   * @return id
-   */
-  @Deprecated // EntityではなくDTOを引数に取ってしまっているので、Repository層の設計として良くない
-  public UUID create(UpsertCardRequest request) {
-    String sql = """
-      INSERT INTO cards (lane_id, title, position, due_date, status, description)
-      VALUES (?, ?, ?, ?, ?, ?)
-      RETURNING id
-    """;
-
-    return jdbcTemplate.queryForObject(
-      sql,
-      UUID.class,
-      request.getLaneId(),
-      request.getTitle(),
-      request.getPosition(),
-      Utils.toSqlDate(request.getDueDate()),
-      request.getStatus().name(),
-      request.getDescription()
-    );
-  }
-
-  /**
-   * Card新規登録
    * @param card
    * @return createdCard
    */

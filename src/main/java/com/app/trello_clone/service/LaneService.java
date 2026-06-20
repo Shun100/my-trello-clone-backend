@@ -6,7 +6,6 @@ import com.app.trello_clone.dto.lane.UpdateLaneRequest;
 import com.app.trello_clone.entity.Lane;
 import com.app.trello_clone.repository.LaneRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

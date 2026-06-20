@@ -24,19 +24,19 @@ public class AuthService {
 
   /**
    * signup
-   * @param request
+   * @param requestDTO
    * @return response
    */
-  public AuthResponse signup(SignupRequest request) {
-    String email = request.getEmail();
+  public AuthResponse signup(SignupRequest requestDTO) {
+    String email = requestDTO.getEmail();
     UUID userId = null;
 
     try {
       // ユーザ登録
       userId = userRepository.create(
-        request.getName(),
+        requestDTO.getName(),
         email,
-        request.getPassword()
+        requestDTO.getPassword()
       );
     } catch (DuplicateKeyException e) {
       throw new UserAlreadyExistsException(e.getMessage());
@@ -58,11 +58,11 @@ public class AuthService {
 
   /**
    * signin
-   * @param request
+   * @param requestDTO
    * @return response
    */
-  public AuthResponse signin(SigninRequest request) {
-    User user = userRepository.findByEmail(request.getEmail());
+  public AuthResponse signin(SigninRequest requestDTO) {
+    User user = userRepository.findByEmail(requestDTO.getEmail());
     String token = jwtService.generateToken(user);
     return new AuthResponse(user, token);
   }
