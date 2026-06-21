@@ -4,7 +4,6 @@ import com.app.trello_clone.constant.CardStatus;
 import com.app.trello_clone.dto.card.CreateCardRequest;
 import com.app.trello_clone.dto.card.FindCardResponse;
 import com.app.trello_clone.dto.card.UpdateCardRequest;
-import com.app.trello_clone.dto.card.UpsertCardRequest;
 import com.app.trello_clone.entity.Card;
 import com.app.trello_clone.repository.CardRepository;
 import lombok.RequiredArgsConstructor;

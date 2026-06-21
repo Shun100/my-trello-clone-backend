@@ -5,7 +5,6 @@ import com.app.trello_clone.dto.auth.SignupRequest;
 import com.app.trello_clone.dto.auth.AuthResponse;
 import com.app.trello_clone.entity.User;
 import com.app.trello_clone.errors.UserAlreadyExistsException;
-import com.app.trello_clone.errors.UserNotFoundException;
 import com.app.trello_clone.service.auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

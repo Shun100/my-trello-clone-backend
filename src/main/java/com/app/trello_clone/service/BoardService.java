@@ -1,17 +1,11 @@
 package com.app.trello_clone.service;
 
-import com.app.trello_clone.constant.CardStatus;
 import com.app.trello_clone.dto.board.FindBoardResponse;
 import com.app.trello_clone.dto.card.FindCardResponse;
-import com.app.trello_clone.dto.card.UpsertCardRequest;
 import com.app.trello_clone.dto.lane.FindLaneResponse;
 import com.app.trello_clone.entity.Board;
-import com.app.trello_clone.entity.Lane;
 import com.app.trello_clone.repository.BoardRepository;
-import com.app.trello_clone.repository.CardRepository;
-import com.app.trello_clone.repository.LaneRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.processing.Find;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
