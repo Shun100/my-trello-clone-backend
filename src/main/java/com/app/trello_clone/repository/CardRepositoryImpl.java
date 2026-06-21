@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
-@Profile("product")
+@Profile("prod")
 public class CardRepositoryImpl implements CardRepository {
   private final JdbcTemplate jdbcTemplate;
 
