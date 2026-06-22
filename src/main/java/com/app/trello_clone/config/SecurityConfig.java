@@ -44,7 +44,7 @@ public class SecurityConfig {
               "/auth/signin").permitAll()
             .anyRequest().authenticated()
         )
-        .addFilterBefore( // JWT検証
+        .addFilterBefore( // JWT Authentication Filter登録
           jwtAuthenticationFilter,
           UsernamePasswordAuthenticationFilter.class
         ); // Beforeなので、authorizeHttpRequestsよりも先にこちらが実行される

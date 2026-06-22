@@ -15,7 +15,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
-@Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -35,6 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     HttpServletResponse response,
     FilterChain filterChain
   ) throws ServletException, IOException {
+
+    System.out.println("=== JWT FILTER RUN ===");
 
     final String authHeader = request.getHeader("Authorization");
 

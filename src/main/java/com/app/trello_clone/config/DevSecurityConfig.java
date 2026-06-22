@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -21,10 +22,16 @@ public class DevSecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+    System.out.println("=== DevSecurityConfig Loaded");
+
     http
       .cors(cors -> cors.configurationSource(corsConfigSource())) // CORS設定
       .csrf(AbstractHttpConfigurer::disable)
+      .sessionManagement(session ->
+        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+    // JWT Authentication Filterは登録しない （Authentication: Bearer xxx が付いていてもJWT検証を行わない）
     return http.build();
   }
 
