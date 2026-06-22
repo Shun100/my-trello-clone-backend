@@ -38,7 +38,7 @@ public class DevSecurityConfig {
     configuration.setAllowedOrigins(List.of(allowedOrigin));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("*"));
-    configuration.setAllowCredentials(true); // JWT Authorization Header許可用
+    configuration.setAllowCredentials(true); // JWT Authorization Headerを許可
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
