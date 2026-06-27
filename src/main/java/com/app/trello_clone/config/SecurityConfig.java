@@ -19,7 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.List;
 
 @Configuration // DIコンテナに読み込ませる設定
-@Profile("prod")
+@Profile({ "prod", "test" })
 @RequiredArgsConstructor
 public class SecurityConfig {
 
