@@ -27,6 +27,12 @@ public interface CardRepository {
   void update(Card card);
 
   /**
+   * position更新
+   * @param cards
+   */
+  void updatePosition(List<Card> cards);
+
+  /**
    * カード削除
    * @param cardId
    */

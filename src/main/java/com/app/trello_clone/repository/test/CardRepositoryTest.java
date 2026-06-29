@@ -65,6 +65,11 @@ public class CardRepositoryTest implements CardRepository {
     throw new DataAccessResourceFailureException("Failed to update");
   }
 
+  @Override
+  public void updatePosition(List<Card> cards) {
+    throw new DataAccessResourceFailureException("Failed to update");
+  }
+
   /**
    * カード削除
    * @param cardId

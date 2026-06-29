@@ -21,6 +21,7 @@ public class CardRepositoryImpl implements CardRepository {
    * @param card
    * @return createdCard
    */
+  @Override
   public Card create(Card card) {
     String sql = """
       INSERT INTO cards (lane_id, title, position, due_date, status, description)
@@ -45,6 +46,7 @@ public class CardRepositoryImpl implements CardRepository {
    * @param laneId
    * @return cards
    */
+  @Override
   public List<Card> findByLaneId(UUID laneId) {
     String sql = """
       SELECT * FROM cards WHERE lane_id = ?
@@ -61,6 +63,7 @@ public class CardRepositoryImpl implements CardRepository {
    * Card更新
    * @param card
    */
+  @Override
   public void update(Card card) {
     System.out.println(card.toString());
 
@@ -85,10 +88,34 @@ public class CardRepositoryImpl implements CardRepository {
     );
   }
 
+  @Override
+  public void updatePosition(List<Card> cards) {
+    String sql = """
+      update cards
+      SET
+        lane_id = ?
+        position = ?
+        updated_at = CURRENT_TIMESTAMP
+      where id = ?
+    """;
+
+    jdbcTemplate.batchUpdate(
+      sql,
+      cards,
+      cards.size(),
+      (ps, card) -> {
+        ps.setObject(1, card.getLaneId());
+        ps.setInt(2, card.getPosition());
+        ps.setObject(3, card.getId());
+      }
+    );
+  }
+
   /**
    * カード削除
    * @param cardId
    */
+  @Override
   public void delete(UUID cardId) {
     String sql = """
       DELETE FROM cards WHERE id = ?

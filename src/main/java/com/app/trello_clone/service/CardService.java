@@ -3,6 +3,7 @@ package com.app.trello_clone.service;
 import com.app.trello_clone.constant.CardStatus;
 import com.app.trello_clone.dto.card.CreateCardRequest;
 import com.app.trello_clone.dto.card.FindCardResponse;
+import com.app.trello_clone.dto.card.UpdateCardPositionRequest;
 import com.app.trello_clone.dto.card.UpdateCardRequest;
 import com.app.trello_clone.entity.Card;
 import com.app.trello_clone.repository.CardRepository;
@@ -90,6 +91,24 @@ public class CardService {
     card.setDescription(requestDTO.getDescription());
 
     cardRepository.update(card);
+  }
+
+  /**
+   * カード位置更新
+   * @param requestDTOs
+   */
+  public void updatePosition(List<UpdateCardPositionRequest> requestDTOs) {
+    List<Card> cards = new ArrayList<>();
+
+    requestDTOs.forEach(requestDTO -> {
+      Card card = new Card();
+      card.setId(requestDTO.getCardId());
+      card.setLaneId(requestDTO.getLaneId());
+      card.setPosition(requestDTO.getPosition());
+      cards.add(card);
+    });
+
+    cardRepository.updatePosition(cards);
   }
 
   /**

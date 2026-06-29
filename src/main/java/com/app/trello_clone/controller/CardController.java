@@ -1,6 +1,7 @@
 package com.app.trello_clone.controller;
 
 import com.app.trello_clone.dto.card.CreateCardRequest;
+import com.app.trello_clone.dto.card.UpdateCardPositionRequest;
 import com.app.trello_clone.dto.card.UpdateCardRequest;
 import com.app.trello_clone.entity.Card;
 import com.app.trello_clone.service.CardService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -44,6 +46,19 @@ public class CardController {
   public ResponseEntity<Void> update(
     @Valid @RequestBody UpdateCardRequest requestDTO) {
     cardService.update(requestDTO);
+
+    return ResponseEntity.ok().build();
+  }
+
+  /**
+   * カード位置更新
+   * @param requestDTOs
+   * @return responseEntity
+   */
+  @PostMapping("/cards/update/position")
+  public ResponseEntity<Void> updatePosition(
+    @Valid @RequestBody List<UpdateCardPositionRequest> requestDTOs) {
+    cardService.updatePosition(requestDTOs);
 
     return ResponseEntity.ok().build();
   }
