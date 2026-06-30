@@ -93,8 +93,8 @@ public class CardRepositoryImpl implements CardRepository {
     String sql = """
       update cards
       SET
-        lane_id = ?
-        position = ?
+        lane_id = ?,
+        position = ?,
         updated_at = CURRENT_TIMESTAMP
       where id = ?
     """;
