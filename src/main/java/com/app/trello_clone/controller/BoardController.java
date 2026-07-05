@@ -19,10 +19,10 @@ public class BoardController {
   @GetMapping("/boards/{userId}")
   public ResponseEntity<FindBoardResponse> find(
     @PathVariable UUID userId) {
-    FindBoardResponse boardDTO = boardService.find(userId);
+    FindBoardResponse data = boardService.find(userId);
 
     return ResponseEntity
       .status(HttpStatus.OK)
-      .body(boardDTO);
+      .body(data);
   }
 }

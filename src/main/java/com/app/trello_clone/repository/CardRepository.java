@@ -15,10 +15,10 @@ public interface CardRepository {
 
   /**
    * カード検索
-   * @param laneId
+   * @param laneIds
    * @return cards
    */
-  List<Card> findByLaneId(UUID laneId);
+  List<Card> findByLaneIds(List<UUID> laneIds);
 
   /**
    * カード更新

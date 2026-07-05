@@ -1,18 +1,14 @@
 package com.app.trello_clone.dto.board;
 
-import com.app.trello_clone.dto.lane.FindLaneResponse;
-import lombok.Data;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import com.app.trello_clone.entity.Board;
+import com.app.trello_clone.entity.Card;
+import com.app.trello_clone.entity.Lane;
 import java.util.List;
-import java.util.UUID;
 
-@Data
-public class FindBoardResponse {
-  private UUID id;
-  private String title;
-  private List<FindLaneResponse> lanes = new ArrayList<>();
-  private LocalDateTime createdAt;
-  private LocalDateTime updatedAt;
+public record FindBoardResponse (
+  Board board,
+  List<Lane> lanes,
+  List<Card> cards
+) {
+  // ここにメソッドを書くことも可能
 }

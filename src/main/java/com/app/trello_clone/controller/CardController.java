@@ -45,6 +45,7 @@ public class CardController {
   @PostMapping("/cards/update")
   public ResponseEntity<Void> update(
     @Valid @RequestBody UpdateCardRequest requestDTO) {
+    System.out.println(requestDTO.toString());
     cardService.update(requestDTO);
 
     return ResponseEntity.ok().build();
@@ -68,7 +69,9 @@ public class CardController {
    * @param cardId
    */
   @DeleteMapping("/cards/{cardId}")
-  public void delete(@PathVariable UUID cardId) {
+  public ResponseEntity<Void> delete(@PathVariable UUID cardId) {
     cardService.delete(cardId);
+
+    return ResponseEntity.ok().build();
   }
 }

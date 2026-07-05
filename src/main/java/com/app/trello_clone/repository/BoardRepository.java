@@ -42,6 +42,7 @@ public class BoardRepository {
     String sql = """
       SELECT * FROM boards WHERE user_id = ?;
     """;
+
     return jdbcTemplate.queryForObject(
       sql,
       BeanPropertyRowMapper.newInstance(Board.class),

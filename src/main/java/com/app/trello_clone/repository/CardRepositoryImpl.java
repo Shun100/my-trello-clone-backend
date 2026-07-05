@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,19 +45,22 @@ public class CardRepositoryImpl implements CardRepository {
 
   /**
    * Card検索 (LaneId)
-   * @param laneId
+   * @param laneIds
    * @return cards
    */
   @Override
-  public List<Card> findByLaneId(UUID laneId) {
+  public List<Card> findByLaneIds(List<UUID> laneIds) {
+    if (laneIds.isEmpty()) { return new ArrayList<Card>(); }
+
+    String placeholders = String.join(", ", Collections.nCopies(laneIds.size(), "?"));
     String sql = """
-      SELECT * FROM cards WHERE lane_id = ?
-    """;
+      SELECT * FROM cards WHERE lane_id IN (%s)
+    """.formatted(placeholders);
 
     return jdbcTemplate.query(
       sql,
       BeanPropertyRowMapper.newInstance(Card.class),
-      laneId
+      laneIds.toArray()
     );
   }
 

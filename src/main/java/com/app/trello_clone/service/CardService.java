@@ -2,7 +2,6 @@ package com.app.trello_clone.service;
 
 import com.app.trello_clone.constant.CardStatus;
 import com.app.trello_clone.dto.card.CreateCardRequest;
-import com.app.trello_clone.dto.card.FindCardResponse;
 import com.app.trello_clone.dto.card.UpdateCardPositionRequest;
 import com.app.trello_clone.dto.card.UpdateCardRequest;
 import com.app.trello_clone.entity.Card;
@@ -35,30 +34,6 @@ public class CardService {
     card.setDueDate(cal.getTime());
 
     return cardRepository.create(card).getId();
-  }
-
-  /**
-   * カード検索
-   * @param laneId
-   * @return findCardResponse
-   */
-  public List<FindCardResponse> find(UUID laneId) {
-    List<FindCardResponse> cardDTOs = new ArrayList<>();
-
-    List<Card> cardEntities = cardRepository.findByLaneId(laneId);
-    for (Card cardEntity : cardEntities) {
-      FindCardResponse cardDTO = new FindCardResponse();
-      cardDTO.setId(cardEntity.getId());
-      cardDTO.setTitle(cardEntity.getTitle());
-      cardDTO.setPosition(cardEntity.getPosition());
-      cardDTO.setStatus(cardEntity.getStatus());
-      cardDTO.setDueDate(cardEntity.getDueDate());
-      cardDTO.setCreatedAt(cardEntity.getCratedAt());
-      cardDTO.setUpdatedAt(cardEntity.getUpdatedAt());
-      cardDTOs.add(cardDTO);
-    }
-
-    return cardDTOs;
   }
 
   /**
